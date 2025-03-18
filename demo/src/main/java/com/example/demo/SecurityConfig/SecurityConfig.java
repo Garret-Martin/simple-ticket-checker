@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,15 +18,26 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
          http
             .csrf(csrf -> csrf.disable())
+            
             .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/login", "/index.html", "/assets/**", "/css/**", "/js/**", "/scan").permitAll()
+            .requestMatchers("/api/auth/**").permitAll() //login, register
+            .requestMatchers("/login", "/index.html", "/assets/**", "/css/**", "/js/**").permitAll() //public assets
+            .requestMatchers("/api/tickets/**").authenticated() //protected ticket api
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()
             )
             .formLogin(form -> form
             .loginPage("/login")
+            .defaultSuccessUrl("/scan")
             .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
+            )
+            .sessionManagement((session) -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
             return http.build();
     }
