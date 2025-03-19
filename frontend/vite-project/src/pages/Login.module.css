@@ -9,7 +9,10 @@
     margin: 0;
     overflow: hidden;
   }
-
+  .errorMessage a {
+    font-size: x-large;
+    background-color: black;
+  }
   
   .login {
     overflow: hidden;
@@ -124,9 +127,9 @@
   }
   .login a {
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(235, 9, 9, 0.6);
     position: absolute;
-    right: 10px;
-    bottom: 10px;
-    font-size: 12px;
+    right: 20px;
+    bottom: 40px;
+    font-size: 17px;
   }

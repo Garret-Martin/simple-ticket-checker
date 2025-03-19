@@ -5,6 +5,7 @@ import styles from "./Login.module.css";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,6 +16,7 @@ function Login() {
   });
 
   const handleLogin = async (e) => {
+    setErrorMessage("");
     e.preventDefault();
     const params = new URLSearchParams();
     params.append("username", username);
@@ -30,14 +32,16 @@ function Login() {
       });
 
       if (response.ok) {
-        alert("Login Successful!");
         navigate("/scan"); // Redirect to dashboard
-      } else {
-        alert("Invalid username or password");
+      } else if (response.status == 401){
+        setErrorMessage("Invalid username or password.");
+      }
+      else{
+        setErrorMessage("Error logging in. Response " + response.status);
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error logging in.");
+      setErrorMessage("Error logging in.");
     }
   };
 
@@ -47,6 +51,7 @@ function Login() {
         <input type="text" placeholder="Username" value={username} onInput={(e) => setUsername(e.target.value)} />
         <input type="password" placeholder="Password" value={password} onInput={(e) => setPassword(e.target.value)} />
         <button>Login</button>
+        <a className={styles.errorMessage}>{errorMessage}</a>
       </form>
     </div>
   );
