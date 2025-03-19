@@ -7,12 +7,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,20 +37,4 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    @PostMapping("/login") 
-    public ResponseEntity<Map<String, String>> login(@RequestParam String username, @RequestParam String password) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(username, password)
-            );
-            return ResponseEntity.ok(Map.of(
-            "message", "Authenticated",
-            "username", authentication.getName()
-            ));
-        } catch (AuthenticationException e) {
-            // TODO: handle exception
-            return ResponseEntity.status(401).body(Map.of("error", "Invalid username or password"));
-        }
-        
-    }
 }

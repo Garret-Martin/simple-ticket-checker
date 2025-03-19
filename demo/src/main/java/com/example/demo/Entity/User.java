@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedBy;
 
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;

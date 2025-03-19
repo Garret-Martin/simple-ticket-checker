@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -27,8 +29,12 @@ public class SecurityConfig {
             .anyRequest().authenticated()
             )
             .formLogin(form -> form
-            .loginPage("/login")
-            .defaultSuccessUrl("/scan")
+                .loginPage("/login")
+                //.defaultSuccessUrl("/scan")
+                .successHandler((request, response, authentication) -> { 
+                    // Prevent redirect to unwanted pages after login
+                    response.setStatus(HttpServletResponse.SC_OK);
+                })
             .permitAll()
             )
             .logout(logout -> logout
@@ -36,8 +42,10 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
             )
-            .sessionManagement((session) -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Create session always
+                .maximumSessions(1) // Optional: Limit to one session per user
+                .expiredUrl("/login?expired") // Optional: Redirect if session expires
             );
             return http.build();
     }

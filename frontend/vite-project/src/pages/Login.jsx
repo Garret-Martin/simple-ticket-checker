@@ -21,7 +21,7 @@ function Login() {
     params.append("password", password);
 
     try {
-      const response = await fetch("https://test.martinfamily.work/api/auth/login", {
+      const response = await fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -30,9 +30,7 @@ function Login() {
       });
 
       if (response.ok) {
-        const data = await response.json();
         alert("Login Successful!");
-        console.log(data);
         navigate("/scan"); // Redirect to dashboard
       } else {
         alert("Invalid username or password");

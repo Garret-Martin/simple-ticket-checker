@@ -29,14 +29,10 @@ function Scan() {
 
     async function success(result) {
       try {
-        const response = await fetch(`https://test.martinfamily.work/api/tickets/${result}`, {
+        const response = await fetch(`/api/tickets/${result}`, {
           method: "GET",
           credentials: "include", // Ensures cookies are sent
         });
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-    
         const data = await response.text();
         setServerResponse(data);
       } catch (error) {

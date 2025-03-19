@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import java.util.Map;
 import com.example.demo.service.UserService;
 
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
