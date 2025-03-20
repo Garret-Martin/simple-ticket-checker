@@ -24,7 +24,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll() //login, register
             .requestMatchers("/login", "/index.html", "/assets/**", "/css/**", "/js/**").permitAll() //public assets
-            .requestMatchers("/api/tickets/**").authenticated() //protected ticket api
+            .requestMatchers("/api/tickets/**").permitAll() //protected ticket api
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()
             )

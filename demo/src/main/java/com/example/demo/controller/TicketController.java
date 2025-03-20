@@ -21,20 +21,17 @@ public class TicketController {
     public TicketController(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
-
-    @GetMapping("/{ticketNumber}")
-    public ResponseEntity<String> checkTicket(@PathVariable String ticketNumber) {
+    @GetMapping("/{ticketNumber}") 
+    public ResponseEntity<Ticket> jsonCheckTicket(@PathVariable String ticketNumber) {
         Optional<Ticket> ticket = ticketRepository.findByTicketId(ticketNumber);
-        if(ticket.isPresent()) {
-            if(ticket.get().isCheckedIn()){
-                return ResponseEntity.badRequest().body("Ticket already checked in at " + ticket.get().getCheckedInAt() + ".");
-            }
-            else{
-                return ResponseEntity.ok("Ticket is valid");
-            }
+        if(ticket.isPresent()) { 
+            return ResponseEntity.ok(ticket.get());
         }
-        return ResponseEntity.badRequest().body("Invalid ticket");
+        else {
+            return ResponseEntity.notFound().build(); //404
+        }
     }
+    
 
     @PostMapping("/{ticketNumber}/check-in")
     public ResponseEntity<String> checkInTicket(@PathVariable String ticketNumber) {
