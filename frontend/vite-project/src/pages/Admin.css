@@ -1,0 +1,63 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+}
+.admin {
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    display: flex;
+}
+.admin-content {
+    width: 85%;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 20px;
+    background-color: #c90303;
+  }
+
+.Sidebar {
+    height: 100%;
+    width: 15%;
+    background-color: rgba(2, 85, 71, 0.418);
+}
+
+.SidebarList {
+    height: auto;
+    padding: 0;
+    margin: 0;
+    margin-right: 0;
+    background-color: rgba(2, 85, 71, 0.418);
+}
+.SidebarList .row {
+    width: 100;
+    height: 5vh;
+    border: 2px solid rgba(0, 0, 0, 0.199);
+    list-style-type: none;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: medium;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color:white;
+}
+.SidebarList .row:hover {
+    cursor: pointer;
+    background-color: rgba(2, 85, 71, 0.418);
+}
+.SidebarList .row #active {
+    background-color: rgba(2, 85, 71, 0.418);
+}
+.row #icon {
+    flex: 30%;
+    display: grid;
+    place-items: center;
+}
+.row #title {
+    flex: 70%;
+}

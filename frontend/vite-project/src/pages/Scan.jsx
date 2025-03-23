@@ -6,6 +6,7 @@ function Scan() {
   const [serverResponse, setServerResponse] = useState("");
   const [textInput, setTextInput] = useState("");
   const [ticketNumber, setTicketNumber] = useState("");
+  const [checkInButtonVisible, setCheckInButtonVisible] = useState(false);
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner("reader", {
@@ -57,6 +58,7 @@ function Scan() {
     }
   }
   async function fetchTicket(ticketNumber) {
+    setCheckInButtonVisible(false);
     try {
       const response = await fetch(`/api/tickets/${ticketNumber}`, {
         method: "GET",
@@ -76,6 +78,7 @@ function Scan() {
       } else {  // ticket ready to be checked
         setServerResponse(data.ticketId);
         setTicketNumber(data.ticketId);
+        setCheckInButtonVisible(true); //display check in button
       }
     } catch (error) { //does not catch 404
       console.error("API error:", error);
@@ -103,7 +106,7 @@ function Scan() {
       {serverResponse && 
       <div className={styles.result_container}>
         <a>{serverResponse}</a>
-        <button onClick={handleCheckin}>Check In</button>
+        {checkInButtonVisible && <button onClick={handleCheckin}>Check In</button>}
       </div>
       }
     </div>
