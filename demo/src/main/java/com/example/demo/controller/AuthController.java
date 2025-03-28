@@ -21,11 +21,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<String> register(@RequestParam String username, @RequestParam String password, @RequestParam String role) {
         if(userService.existsByUserName(username)){
             return ResponseEntity.badRequest().body("User already exists!");
         }
-        userService.registerUser(username, password, "USER");
+        userService.registerUser(username, password, role);
         return ResponseEntity.ok("User registered successfully");
     }
 

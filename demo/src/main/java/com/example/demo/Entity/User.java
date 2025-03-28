@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
 
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -36,9 +38,9 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    /* 
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+    
     @CreatedBy
-    @Column
     private Long createdBy;
-    */
 }

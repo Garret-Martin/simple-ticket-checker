@@ -85,7 +85,6 @@ function Scan() {
       setServerResponse("Error fetching ticket information.");
     }
   }
-  //TODO: make fetchTicket receive json after implemented in backend
   //TODO: make the check in button work
   //TODO: componerize
   return (

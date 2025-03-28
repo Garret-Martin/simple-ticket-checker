@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,4 +43,12 @@ public class UserService implements UserDetailsService {
             .roles(user.getRoles().toArray(new String[0]))
             .build();
     }    
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    // ✅ Search Users
+    public Page<User> searchUsers(String search, Pageable pageable) {
+        return userRepository.findByUsernameContainingIgnoreCaseOrRolesContainingIgnoreCase(search, search, pageable);
+    }
 }
