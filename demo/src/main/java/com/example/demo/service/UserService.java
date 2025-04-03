@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import org.springframework.data.domain.Page;
@@ -28,6 +29,36 @@ public class UserService implements UserDetailsService {
         user.setRoles(Set.of(role));
         return userRepository.save(user);
         
+    }
+    public boolean existsById(Long id){
+        return userRepository.existsById(id);
+    }
+    public User getUserById(Long id) {
+        return userRepository.getById(id);
+    }
+   
+    public User updateUser(Long id, String username, String password, Set<String> roles) {
+        User user = getUserById(id);
+        
+        // Update username if provided
+        if (username != null) {
+            user.setUsername(username);
+        }
+        
+        // Update password if provided
+        if (password != null && !password.isEmpty()) {
+            user.setPassword(passwordEncoder.encode(password));
+        }
+        
+        // Update roles if provided
+        if (roles != null && !roles.isEmpty()) {
+            user.setRoles(roles);
+        }
+        
+        // Update timestamp
+        user.setUpdatedAt(LocalDateTime.now());
+        
+        return userRepository.save(user);
     }
     public boolean existsByUserName(String username){
         return userRepository.existsByUsername(username);

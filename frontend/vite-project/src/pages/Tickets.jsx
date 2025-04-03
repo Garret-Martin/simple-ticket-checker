@@ -29,7 +29,12 @@ function Tickets() {
              response = await fetch(
               `http://localhost:8080/admin/tickets?search=${searchQuery}&page=${currentPage - 1}&size=${ticketsPerPage}`, {
                 method: "GET",
-                credentials: "include"
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json", // Ensure content type is JSON
+                  "Accept": "application/json", // Accept JSON response
+                  "Origin": "http://localhost:5173", // ✅ Explicitly specify frontend origin
+                }
               }
             );
           }

@@ -43,4 +43,8 @@ public class User {
     
     @CreatedBy
     private Long createdBy;
+
+    public void setRoles(Set<String> roles){
+        this.roles = roles;
+    }
 }
