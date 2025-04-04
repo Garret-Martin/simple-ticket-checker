@@ -83,7 +83,7 @@ const createUser = async (userData) => {
   }
 };
 
-const UserTable = ({ loading }) => {
+const UserTable = () => {
   const [rows, setRows] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [paginationModel, setPaginationModel] = useState({
@@ -115,6 +115,7 @@ const UserTable = ({ loading }) => {
   const [alertSeverity, setAlertSeverity] = useState("success");
 
   const [refreshTrigger, setRefreshTrigger] = useState(false); // refresh for editing
+  const [loading, setLoading] = useState(false);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -132,6 +133,7 @@ const UserTable = ({ loading }) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       const data = await fetchUsers(
         searchQuery,
@@ -140,6 +142,7 @@ const UserTable = ({ loading }) => {
       );
       setRows(data.content);
       setTotalCount(data.totalElements);
+      setLoading(false);
     };
     fetchData();
   }, [searchQuery, paginationModel.page, paginationModel.pageSize, refreshTrigger]);
@@ -266,12 +269,7 @@ const UserTable = ({ loading }) => {
         showAlert(`User ${newUser.username} created successfully`);
         
         // Refresh the data
-        const data = await fetchUsers(
-          searchQuery,
-          paginationModel.page,
-          paginationModel.pageSize
-        );
-        setRows(data.content);
+        setRefreshTrigger(prev => !prev); 
         
         // Reset form and close dialog
         setNewUser({
