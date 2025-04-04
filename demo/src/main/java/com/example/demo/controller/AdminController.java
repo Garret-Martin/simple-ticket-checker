@@ -1,10 +1,15 @@
 package com.example.demo.controller;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +22,10 @@ import com.example.demo.Entity.Ticket;
 import com.example.demo.Entity.User;
 import com.example.demo.service.TicketService;
 import com.example.demo.service.UserService;
+
+import lombok.Getter;
+import lombok.Setter;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +54,7 @@ public class AdminController {
 
     // make it not give the password
     @GetMapping("/users")
-    public ResponseEntity<Page<User>> getUsers(
+    public ResponseEntity<Page<UserDTO>> getUsers(
             @RequestParam(required = false) String search, @RequestParam int page, @RequestParam int size) {
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Direction.ASC, "id"));
@@ -55,7 +64,17 @@ public class AdminController {
         } else {
             users = userService.getAllUsers(pageable);
         }
-        return ResponseEntity.ok(users);
+        Page<UserDTO> userDTOs = users.map(UserDTO::new);
+        return ResponseEntity.ok(userDTOs);
+    }
+
+    @DeleteMapping("/users/delete")
+    public ResponseEntity<Map<String, String>> deleteUser(@RequestParam Long id) {
+        if (userService.existsById(id)) {
+            userService.deleteUser(id);
+            return ResponseEntity.ok(Map.of("message", "User #" + id + " deleted"));
+        }
+        return ResponseEntity.badRequest().body(Map.of("message", "User not found"));
     }
 
     @PutMapping("/users/{id}")
@@ -137,4 +156,23 @@ public class AdminController {
             this.roles = roles;
         }
     }
+
+    @Getter
+    @Setter
+    public class UserDTO {
+        private Long id;
+        private String username;
+        private Set<String> roles;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        public UserDTO(User user) {
+            this.id = user.getId();
+            this.username = user.getUsername();
+            this.roles = user.getRoles();
+            this.createdAt = user.getCreatedAt();
+            this.updatedAt = user.getUpdatedAt();
+        }
+    }
+
 }

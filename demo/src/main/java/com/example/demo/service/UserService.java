@@ -30,6 +30,9 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
         
     }
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    } 
     public boolean existsById(Long id){
         return userRepository.existsById(id);
     }

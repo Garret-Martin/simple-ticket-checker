@@ -114,6 +114,8 @@ const UserTable = ({ loading }) => {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("success");
 
+  const [refreshTrigger, setRefreshTrigger] = useState(false); // refresh for editing
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
     setPaginationModel((prev) => ({ ...prev, page: 0 }));
@@ -140,7 +142,7 @@ const UserTable = ({ loading }) => {
       setTotalCount(data.totalElements);
     };
     fetchData();
-  }, [searchQuery, paginationModel.page, paginationModel.pageSize]);
+  }, [searchQuery, paginationModel.page, paginationModel.pageSize, refreshTrigger]);
 
   const handleEditClick = (user) => {
     setCurrentUser(user);
@@ -153,6 +155,30 @@ const UserTable = ({ loading }) => {
     setPasswordError("");
     setEditDialogOpen(true);
   };
+
+  const deleteUser = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/admin/users/delete?id=${id}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Origin: "http://localhost:5173",
+        }
+      });
+      const result = await response.json();
+      if(response.ok) {
+        showAlert(result.message);
+        setRefreshTrigger(prev => !prev);
+      }
+      else {
+        showAlert(result.message, "error");
+      }
+    } catch (error) {
+        console.log("api error", error);
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -200,12 +226,7 @@ const UserTable = ({ loading }) => {
       showAlert(`User ${editedUser.username} updated successfully`);
       
       // Refresh the data
-      const data = await fetchUsers(
-        searchQuery,
-        paginationModel.page,
-        paginationModel.pageSize
-      );
-      setRows(data.content);
+      setRefreshTrigger(prev => !prev);
       
       // Close dialog
       setEditDialogOpen(false);
@@ -310,7 +331,7 @@ const UserTable = ({ loading }) => {
           >
             Edit
           </Button>
-          <Button size="small" color="error" variant="contained">
+          <Button size="small" color="error" variant="contained" onClick={() => deleteUser(params.row.id)}>
             Delete
           </Button>
         </Box>
