@@ -12,7 +12,7 @@ function Login() {
     document.body.style.margin = 0;
     return () => {
       document.body.style.margin = "auto";
-    }
+    };
   });
 
   const handleLogin = async (e) => {
@@ -23,20 +23,40 @@ function Login() {
     params.append("password", password);
 
     try {
-      const response = await fetch("/login", {
+      const response = await fetch("http://localhost:8080/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          Origin: "http://localhost:5173",
         },
         body: params.toString(),
       });
 
       if (response.ok) {
-        navigate("/scan"); // Redirect to dashboard
-      } else if (response.status == 401){
+        const userInfoRes = await fetch("http://localhost:8080/api/auth/me", {
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Origin: "http://localhost:5173",
+          },
+        });
+        if (userInfoRes.ok) {
+          const userData = await userInfoRes.json();
+          const role = userData.role;
+          console.log(role);
+          if (role == "ROLE_ADMIN" || role == "ROLE_SUPERVISOR") {
+            console.log("navigating to admin");
+            navigate("/admin");
+          } else {
+            navigate("/scan");
+          }
+        } else {
+          setErrorMessage("Could not retrieve user info.");
+        }
+      } else if (response.status === 401) {
         setErrorMessage("Invalid username or password.");
-      }
-      else{
+      } else {
         setErrorMessage("Error logging in. Response " + response.status);
       }
     } catch (error) {
@@ -48,8 +68,18 @@ function Login() {
   return (
     <div className={styles.background}>
       <form className={styles.login} onSubmit={handleLogin}>
-        <input type="text" placeholder="Username" value={username} onInput={(e) => setUsername(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onInput={(e) => setPassword(e.target.value)} />
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onInput={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onInput={(e) => setPassword(e.target.value)}
+        />
         <button>Login</button>
         <a className={styles.errorMessage}>{errorMessage}</a>
       </form>

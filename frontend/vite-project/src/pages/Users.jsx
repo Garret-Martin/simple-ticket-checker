@@ -414,8 +414,8 @@ const UserTable = ({ loading }) => {
                 onChange={handleInputChange}
                 label="Role"
               >
-                <MenuItem value="USER">User</MenuItem>
-                <MenuItem value="ADMIN">Admin</MenuItem>
+                <MenuItem value="USER">USER</MenuItem>
+                <MenuItem value="ADMIN">ADMIN</MenuItem>
                 <MenuItem value="SUPERVISOR">SUPERVISOR</MenuItem>
               </Select>
             </FormControl>

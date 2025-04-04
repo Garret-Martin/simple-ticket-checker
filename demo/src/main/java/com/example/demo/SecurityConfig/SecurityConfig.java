@@ -23,39 +23,47 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-            .anyRequest().permitAll()
-            /*
-            .requestMatchers("/api/auth/**").permitAll() //login, register
-            .requestMatchers("/login", "/index.html", "/assets/**", "/css/**", "/js/**").permitAll() //public assets
-            .requestMatchers("/api/tickets/**").authenticated() //protected ticket api
-            .requestMatchers("/admin/**").hasRole("ADMIN")
-            .anyRequest().authenticated()
-            */
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                //.defaultSuccessUrl("/scan")
-                .successHandler((request, response, authentication) -> { 
-                    // Prevent redirect to unwanted pages after login
-                    response.setStatus(HttpServletResponse.SC_OK);
-                })
-            .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .permitAll()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Create session always
-                .maximumSessions(1) // Optional: Limit to one session per user
-                .expiredUrl("/login?expired") // Optional: Redirect if session expires
-            );
-            return http.build();
+        http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll() // login, register
+                        .requestMatchers("/login", "/index.html", "/assets/**", "/css/**", "/js/**").permitAll() // public
+                                                                                                                 // assets
+                        .requestMatchers("/api/tickets/**").authenticated() // protected ticket api
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERVISOR")
+                        .anyRequest().authenticated()
+
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        // .defaultSuccessUrl("/scan")
+                        .successHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"status\":\"success\"}");
+                        })
+                        .failureHandler((request, response, exception) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\":\"Authentication failed\"}");
+                        })
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            // Optionally return a custom success message or status
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"status\":\"logged out\"}");
+                        })
+                        .permitAll())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Create session always
+                        .maximumSessions(1) // Optional: Limit to one session per user
+                        .expiredUrl("/login?expired") // Optional: Redirect if session expires
+                );
+        return http.build();
     }
 
     @Bean
@@ -64,16 +72,23 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Frontend origin
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed HTTP methods
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With")); // Allowed headers
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With")); // Ensure headers are exposed
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed HTTP
+                                                                                                   // methods
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With")); // Allowed
+                                                                                                             // headers
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With")); // Ensure
+                                                                                                             // headers
+                                                                                                             // are
+                                                                                                             // exposed
         configuration.setAllowCredentials(true); // Allow credentials (cookies/session info)
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
