@@ -26,7 +26,7 @@ html, body {
     height: 100%;
     width: 15%;
     overflow: hidden;
-    background-color: #353535;
+    background-color: #616060d8;
     transition: width 0.5s ease;
 }
 .Sidebar .toggle-btn {
@@ -34,14 +34,14 @@ html, body {
     cursor: pointer;
     display: flex;
     justify-content: flex-end;
-    border-bottom: 1px solid #1f1d1d;
+    border-bottom: 1px solid #4e4c4c;
 }
 .Sidebar .toggle-btn #icon {
     font-size: xx-large;
     border-radius: 0.2em;
 }
 .Sidebar .toggle-btn #icon:hover {
-    background-color: #2e2d2d;
+    background-color: #535252d8;
 }
 .Sidebar.collapsed {
 
@@ -83,10 +83,10 @@ html, body {
 }
 .SidebarList .row:hover {
     cursor: pointer;
-    background-color: #2e2d2d
+    background-color: #535252d8
 }
 .SidebarList .row.active {
-    background-color: #2c2929
+    background-color: #414040d8
 }
 .row .icon {
     transition: margin 0.3s ease;
@@ -95,7 +95,7 @@ html, body {
     place-items: center;
 }
 .row .icon.active {
-    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.507);
     border-radius: 0.1em;
 }
 .row #title {

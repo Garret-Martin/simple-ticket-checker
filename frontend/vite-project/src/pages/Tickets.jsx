@@ -27,7 +27,7 @@ function Tickets() {
           var response;
           if(searchQuery.length > 0) { //if we are searching
              response = await fetch(
-              `http://localhost:8080/admin/tickets?search=${searchQuery}&page=${currentPage - 1}&size=${ticketsPerPage}`, {
+              `http://localhost:8080/api/admin/tickets?search=${searchQuery}&page=${currentPage - 1}&size=${ticketsPerPage}`, {
                 method: "GET",
                 credentials: "include",
                 headers: {
@@ -40,7 +40,7 @@ function Tickets() {
           }
           else {
              response = await fetch(
-              `http://localhost:8080/admin/tickets?page=${currentPage - 1}&size=${ticketsPerPage}`, {
+              `http://localhost:8080/api/admin/tickets?page=${currentPage - 1}&size=${ticketsPerPage}`, {
                 method: "GET",
                 credentials: "include",
                 headers: {

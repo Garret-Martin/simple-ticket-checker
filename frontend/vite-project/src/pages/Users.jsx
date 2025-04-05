@@ -12,7 +12,6 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import AddIcon from "@mui/icons-material/Add";
@@ -20,7 +19,7 @@ import AddIcon from "@mui/icons-material/Add";
 const fetchUsers = async (query, page, limit) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/admin/users?search=${query}&page=${page}&size=${limit}`,
+      `http://localhost:8080/api/admin/users?search=${query}&page=${page}&size=${limit}`,
       {
         method: "GET",
         credentials: "include",
@@ -41,7 +40,7 @@ const fetchUsers = async (query, page, limit) => {
 // Update user API call
 const updateUser = async (userId, userData) => {
   try {
-    const response = await fetch(`http://localhost:8080/admin/users/${userId}`, {
+    const response = await fetch(`http://localhost:8080/api/admin/users/${userId}`, {
       method: "PUT",
       credentials: "include",
       headers: {
@@ -67,7 +66,7 @@ const createUser = async (userData) => {
       role: userData.role
     });
     
-    const response = await fetch(`http://localhost:8080/admin/create-user?${queryParams}`, {
+    const response = await fetch(`http://localhost:8080/api/admin/create-user?${queryParams}`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -161,7 +160,7 @@ const UserTable = () => {
 
   const deleteUser = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/admin/users/delete?id=${id}`, {
+      const response = await fetch(`http://localhost:8080/api/admin/users/delete?id=${id}`, {
         method: "DELETE",
         credentials: "include",
         headers: {

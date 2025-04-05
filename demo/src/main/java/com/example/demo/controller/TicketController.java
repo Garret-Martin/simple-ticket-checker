@@ -49,16 +49,4 @@ public class TicketController {
             return ResponseEntity.ok("Checked in succesfully at " + ticket.get().getCheckedInAt());
         }
     }
-
-    //eventuallty only allow to admin users
-    @PostMapping("/create/{ticketNumber}")
-    public ResponseEntity<String> createTicket(@PathVariable String ticketNumber) {
-        if(ticketRepository.findByTicketId(ticketNumber).isPresent()) {
-            return ResponseEntity.badRequest().body("Ticket already exists.");
-        }
-        Ticket ticket = new Ticket();
-        ticket.setTicketId(ticketNumber);
-        ticketRepository.save(ticket);
-        return ResponseEntity.ok("Ticket created succesfully");
-    }
 }

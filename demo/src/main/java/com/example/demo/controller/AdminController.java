@@ -29,7 +29,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @RestController()
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 public class AdminController {
     UserService userService;
     TicketService ticketService;
@@ -121,6 +121,15 @@ public class AdminController {
             pageOftickets = ticketService.getAllTickets(pageable);
         }
         return ResponseEntity.ok(pageOftickets);
+    }
+
+    @PostMapping("/create/{ticketNumber}")
+    public ResponseEntity<String> createTicket(@PathVariable String ticketNumber) {
+        if (ticketService.createTicket(ticketNumber)) {
+            return ResponseEntity.ok("Ticket created succesfully");
+        } else {
+            return ResponseEntity.badRequest().body("Ticket already exists.");
+        }
     }
 
     // Request class for updating user
