@@ -50,7 +50,6 @@ public class AdminController {
         return ResponseEntity.ok(Map.of("message", "Account " + username + " created "));
     }
 
-    // make it not give the password
     @GetMapping("/users")
     public ResponseEntity<Page<UserDTO>> getUsers(
             @RequestParam(required = false) String search, @RequestParam int page, @RequestParam int size) {

@@ -314,6 +314,7 @@ const UserTable = () => {
         return params.value;
       }
     },
+    { field: "createdBy", headerName: "Created By", width: 180 },
     { field: "createdAt", headerName: "Created At", width: 180 },
     { field: "updatedAt", headerName: "Updated At", width: 180 },
     {

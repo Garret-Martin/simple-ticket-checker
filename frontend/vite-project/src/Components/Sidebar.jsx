@@ -1,23 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { SidebarData } from "./SidebarData";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Icon } from "@mui/material";
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 
 function Sidebar() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
   return (
-    <div className="Sidebar">
+    <div className={`Sidebar ${collapsed ? "collapsed" : ""}`}>
+      <div className="toggle-btn" onClick={() => { setCollapsed(!collapsed) }}>
+        {collapsed ? (
+          <KeyboardDoubleArrowRightIcon id="icon"/>
+        ) : (
+          <KeyboardDoubleArrowLeftIcon id="icon"/>
+        )}
+      </div>
       <ul className="SidebarList">
         {SidebarData.map((val1, key) => {
+          const isActive = location.pathname === val1.link;
           return (
             <li
               key={key}
               onClick={() => {
-                navigate(val1.link)
+                navigate(val1.link);
               }}
-              className="row"
-              id={window.location.pathname == val1.link ? "active" : ""}
+              className={`row ${isActive ? "active" : ""}`}
             >
-              <div id="icon">{val1.icon}</div>
+              <div className="icon">
+                <Icon className={`icon ${isActive ? "active" : ""}`}>
+                  {val1.icon}
+                </Icon>
+              </div>
               <div id="title">{val1.title}</div>
             </li>
           );

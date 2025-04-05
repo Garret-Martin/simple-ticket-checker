@@ -19,9 +19,5 @@ export const SidebarData =  [
         title: "Users",
         icon: <PeopleIcon/>,
         link: "/admin/users"
-    },
-    {
-        title: "Logs",
-        link: "/admin/logs"
     }
 ]
