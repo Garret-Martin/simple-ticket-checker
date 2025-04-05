@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,11 +42,11 @@ public class AdminController {
 
     @PostMapping("/create-user")
     public ResponseEntity<Map<String, String>> createUser(@RequestParam String username, @RequestParam String password,
-            @RequestParam String role) {
+            @RequestParam String role, Authentication authentication) {
         if (userService.existsByUserName(username)) {
             return ResponseEntity.badRequest().body(Map.of("message", "User already exists!"));
         }
-        userService.registerUser(username, password, role);
+        userService.registerUser(username, password, role, authentication.getName());
         // TODO:add time created to user
         return ResponseEntity.ok(Map.of("message", "Account " + username + " created "));
     }
@@ -169,6 +170,7 @@ public class AdminController {
         private Long id;
         private String username;
         private Set<String> roles;
+        private String createdBy;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
 
@@ -178,6 +180,7 @@ public class AdminController {
             this.roles = user.getRoles();
             this.createdAt = user.getCreatedAt();
             this.updatedAt = user.getUpdatedAt();
+            this.createdBy = user.getCreatedBy();
         }
     }
 

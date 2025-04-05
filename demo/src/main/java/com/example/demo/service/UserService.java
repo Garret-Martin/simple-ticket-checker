@@ -22,11 +22,12 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User registerUser(String username, String password, String role) {
+    public User registerUser(String username, String password, String role, String createdBy) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setRoles(Set.of(role));
+        user.setCreatedBy(createdBy);
         return userRepository.save(user);
         
     }

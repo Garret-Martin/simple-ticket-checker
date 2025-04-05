@@ -42,7 +42,7 @@ public class User {
     private LocalDateTime updatedAt;
     
     @CreatedBy
-    private Long createdBy;
+    private String createdBy;
 
     public void setRoles(Set<String> roles){
         this.roles = roles;
