@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import styles from "./Scan.module.css";
+import AccountIcon from "../Components/AccountIcon";
 
 function Scan() {
   const [serverResponse, setServerResponse] = useState("");
@@ -85,9 +86,10 @@ function Scan() {
       setServerResponse("Error fetching ticket information.");
     }
   }
-  //TODO: make the check in button work
-  //TODO: componerize
+  
   return (
+    <>
+    <AccountIcon/>
     <div className={styles.background}>
       <div id="reader" className={styles.scanner}>
         <div className={styles.scannerLine}></div>
@@ -109,6 +111,7 @@ function Scan() {
       </div>
       }
     </div>
+    </>
   );
 }
 

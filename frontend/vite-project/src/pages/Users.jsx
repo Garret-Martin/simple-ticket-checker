@@ -339,7 +339,7 @@ const UserTable = () => {
 
   return (
     <>
-      <Paper sx={{ width: "100%"}}>
+      <Paper sx={{ width: "98%", margin: "1%"}}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
           <TextField
             label="Search Users"

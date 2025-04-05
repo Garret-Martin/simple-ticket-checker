@@ -8,7 +8,7 @@ export const SidebarData =  [
     {
         title: "Scanner",
         icon: <DocumentScannerIcon/>,
-        link: "/scan"
+        link: "/admin/scan"
     },
     {
         title: "Tickets",
