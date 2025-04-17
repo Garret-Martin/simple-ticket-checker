@@ -23,7 +23,7 @@ public class TicketController {
     }
     @GetMapping("/{ticketNumber}") 
     public ResponseEntity<Ticket> jsonCheckTicket(@PathVariable String ticketNumber) {
-        Optional<Ticket> ticket = ticketRepository.findByTicketId(ticketNumber);
+        Optional<Ticket> ticket = ticketRepository.findById(ticketNumber);
         if(ticket.isPresent()) { 
             return ResponseEntity.ok(ticket.get());
         }
@@ -35,7 +35,7 @@ public class TicketController {
 
     @PostMapping("/{ticketNumber}/check-in")
     public ResponseEntity<String> checkInTicket(@PathVariable String ticketNumber) {
-        Optional<Ticket> ticket = ticketRepository.findByTicketId(ticketNumber);
+        Optional<Ticket> ticket = ticketRepository.findById(ticketNumber);
         if(ticket.isEmpty()) {
             return ResponseEntity.badRequest().body("Invalid ticket");
         }

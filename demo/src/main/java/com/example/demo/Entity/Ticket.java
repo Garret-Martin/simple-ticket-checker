@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,14 +18,14 @@ import lombok.*;
 @NoArgsConstructor
 public class Ticket {
     @Id
-    @Column(name = "ticket_id", unique = true, nullable = false)
-    private String ticketId;
+    @Column(unique = true, nullable = false)
+    private String id;
 
     @Column(name = "checked_in", nullable = false)
     private boolean checkedIn = false;
 
     private void generateTicketNumber(){
-        this.ticketId = UUID.randomUUID().toString().replaceAll(ticketId, ticketId);
+        this.id = UUID.randomUUID().toString().replaceAll(id, id);
     }
 
     @CreationTimestamp
@@ -37,4 +38,6 @@ public class Ticket {
     @Column(name = "checked_in_at")
     private LocalDateTime checkedInAt;
 
+    @CreatedBy
+    private String createdBy;
 }
