@@ -21,6 +21,7 @@ import com.example.demo.Entity.Ticket;
 import com.example.demo.Entity.User;
 import com.example.demo.service.TicketService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.TicketService.TicketDTO;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,8 +47,11 @@ public class AdminController {
         if (userService.existsByUserName(username)) {
             return ResponseEntity.badRequest().body(Map.of("message", "User already exists!"));
         }
-        userService.registerUser(username, password, role, authentication.getName());
-        // TODO:add time created to user
+        try {
+            userService.registerUser(username, password, role, authentication.getName());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Authentication error")); //we should never hit this
+        }
         return ResponseEntity.ok(Map.of("message", "Account " + username + " created "));
     }
 
@@ -111,11 +115,11 @@ public class AdminController {
     }
 
     @GetMapping("/tickets")
-    public ResponseEntity<Page<Ticket>> getTickets(
+    public ResponseEntity<Page<TicketDTO>> getTickets(
             @RequestParam(required = false) String search,
             @RequestParam() int page, @RequestParam int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Ticket> pageOftickets;
+        Page<TicketDTO> pageOftickets;
         if (search != null && !search.isEmpty()) {
             pageOftickets = ticketService.searchTickets(search, pageable);
         } else {
@@ -180,7 +184,7 @@ public class AdminController {
             this.roles = user.getRoles();
             this.createdAt = user.getCreatedAt();
             this.updatedAt = user.getUpdatedAt();
-            this.createdBy = user.getCreatedBy();
+            this.createdBy = user.getCreatedBy() != null ? user.getCreatedBy().getUsername() : "Unknown";
         }
     }
 
