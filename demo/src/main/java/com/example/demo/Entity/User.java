@@ -41,8 +41,14 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
     @CreatedBy
-    private String createdBy;
+    private User createdBy;
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
 
     public void setRoles(Set<String> roles){
         this.roles = roles;

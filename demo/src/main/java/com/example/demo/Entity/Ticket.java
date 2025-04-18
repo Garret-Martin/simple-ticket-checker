@@ -24,7 +24,7 @@ public class Ticket {
     @Column(name = "checked_in", nullable = false)
     private boolean checkedIn = false;
 
-    private void generateTicketNumber(){
+    private void generateTicketNumber() {
         this.id = UUID.randomUUID().toString().replaceAll(id, id);
     }
 
@@ -38,6 +38,9 @@ public class Ticket {
     @Column(name = "checked_in_at")
     private LocalDateTime checkedInAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
     @CreatedBy
-    private String createdBy;
+    private User createdBy;
+
 }

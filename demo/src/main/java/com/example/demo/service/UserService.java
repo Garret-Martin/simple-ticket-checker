@@ -27,7 +27,9 @@ public class UserService implements UserDetailsService {
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setRoles(Set.of(role));
-        user.setCreatedBy(createdBy);
+        User creator = userRepository.findByUsername(createdBy)
+        .orElseThrow(() -> new RuntimeException("Creator user not found"));
+        user.setCreatedBy(creator);
         return userRepository.save(user);
         
     }
@@ -38,7 +40,7 @@ public class UserService implements UserDetailsService {
         return userRepository.existsById(id);
     }
     public User getUserById(Long id) {
-        return userRepository.getById(id);
+        return userRepository.getReferenceById(id);
     }
    
     public User updateUser(Long id, String username, String password, Set<String> roles) {

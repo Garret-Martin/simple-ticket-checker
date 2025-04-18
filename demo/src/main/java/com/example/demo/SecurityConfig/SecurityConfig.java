@@ -27,12 +27,15 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll()
+                /* 
                         .requestMatchers("/api/auth/**").permitAll() // login, register
                         .requestMatchers("/login", "/index.html", "/assets/**", "/css/**", "/js/**").permitAll() // public
                                                                                                                  // assets
                         .requestMatchers("/api/tickets/**").authenticated() // protected ticket api
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERVISOR")
                         .anyRequest().authenticated()
+                        */
 
                 )
                 .formLogin(form -> form
