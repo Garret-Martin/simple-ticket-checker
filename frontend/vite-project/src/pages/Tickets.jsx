@@ -72,28 +72,77 @@ function Tickets() {
                 method: "GET",
                 credentials: "include",
                 headers: {
-                  "Content-Type": "application/json", // Ensure content type is JSON
-                  "Accept": "application/json", // Accept JSON response
-                  "Origin": "http://localhost:5173", // Explicitly specify frontend origin
+                  "Content-Type": "application/json",
+                  "Accept": "application/json",
+                  "Origin": "http://localhost:5173", 
                 }
               }
             );
             return response.json();
           }
-          if (!response.ok) {
-            throw new Error("Failed to fetch tickets");
-          }
-          const data = await response.json();
-          setTickets(data.content || []); // Assuming data.content holds paginated data
         } catch (error) {
           console.log("API ERROR: ", error);
           return { content: [], totalElements: 0 };
         }
       }
+      async function handleEditClick(row) {
+        try {
+          let response;
+          if(!row.checkedIn) {
+            response = await fetch(`http://localhost:8080/api/tickets/${row.id}/check-in`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Origin": "http://localhost:5173", 
+            }
+          })
+        }
+        else {
+          response = await fetch(`http://localhost:8080/api/admin/tickets/${row.id}/uncheck`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Origin": "http://localhost:5173", 
+            }
+          })
+        }
+          if(response.ok) {
+            setRows(prev =>
+              prev.map(ticket =>
+                ticket.id === row.id ? { ...ticket, checkedIn: !ticket.checkedIn } : ticket
+              )
+            );            
+          } else {
+            console.error("API request failed with status:", response.status);
+          }
+      
+        } catch (error) {
+          console.log("API ERROR: ", error);
+        }
+      }
 
       const columns = [
           { field: "id", headerName: "Ticker Number", width: 200 },
-          { field: "checkedIn", headerName: "checkedIn", width: 100 },
+          { field: "checkedIn", headerName: "checkedIn", width: 100,
+            renderCell: (params) => {
+              const isCheckedIn = params.row.checkedIn;
+          
+              return (
+                <Button
+                  size="small"
+                  variant="contained"
+                  color={isCheckedIn ? "success" : "error"} // green if true, red if false
+                  onClick={() => handleEditClick(params.row)}
+                >
+                  {isCheckedIn ? "Yes" : "No"}
+                </Button>
+              );
+            }
+          },
           { field: "created_at", headerName: "Created At", width: 180 },
           { field: "updatedAt", headerName: "Updated At", width: 180 },
           { field: "createdBy", headerName: "Created By", width: 180 },
