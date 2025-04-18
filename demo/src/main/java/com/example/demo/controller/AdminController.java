@@ -1,6 +1,4 @@
 package com.example.demo.controller;
-
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,14 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.demo.Entity.Ticket;
+import com.example.demo.dto.TicketDTO;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.Entity.User;
 import com.example.demo.service.TicketService;
 import com.example.demo.service.UserService;
-import com.example.demo.service.TicketService.TicketDTO;
-
-import lombok.Getter;
-import lombok.Setter;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -165,26 +160,6 @@ public class AdminController {
 
         public void setRoles(String[] roles) {
             this.roles = roles;
-        }
-    }
-
-    @Getter
-    @Setter
-    public class UserDTO {
-        private Long id;
-        private String username;
-        private Set<String> roles;
-        private String createdBy;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-
-        public UserDTO(User user) {
-            this.id = user.getId();
-            this.username = user.getUsername();
-            this.roles = user.getRoles();
-            this.createdAt = user.getCreatedAt();
-            this.updatedAt = user.getUpdatedAt();
-            this.createdBy = user.getCreatedBy() != null ? user.getCreatedBy().getUsername() : "Unknown";
         }
     }
 

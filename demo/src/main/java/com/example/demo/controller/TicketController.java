@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Entity.Ticket;
+import com.example.demo.dto.TicketDTO;
 import com.example.demo.repository.TicketRepository;
 
 @RestController
@@ -22,8 +23,8 @@ public class TicketController {
         this.ticketRepository = ticketRepository;
     }
     @GetMapping("/{ticketNumber}") 
-    public ResponseEntity<Ticket> jsonCheckTicket(@PathVariable String ticketNumber) {
-        Optional<Ticket> ticket = ticketRepository.findById(ticketNumber);
+    public ResponseEntity<TicketDTO> jsonCheckTicket(@PathVariable String ticketNumber) {
+        Optional<TicketDTO> ticket = ticketRepository.findById(ticketNumber).map(TicketDTO::new);
         if(ticket.isPresent()) { 
             return ResponseEntity.ok(ticket.get());
         }
